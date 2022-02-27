@@ -1,0 +1,11 @@
+{
+  "name": "LabelLayer",
+  "platform": "HTML",
+  "version": "2.23",
+  "wabVersion": "2.23",
+  "author": "Esri R&D Center Beijing",
+  "description": "Add labels to a layer added in WaB",
+  "copyright": "",
+  "license": "http://www.apache.org/licenses/LICENSE-2.0",
+  "featureActions": []
+}
