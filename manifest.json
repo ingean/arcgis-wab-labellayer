@@ -3,9 +3,9 @@
   "platform": "HTML",
   "version": "2.23",
   "wabVersion": "2.23",
-  "author": "Esri R&D Center Beijing",
-  "description": "Add labels to a layer added in WaB",
-  "copyright": "",
+  "author": "Geodata AS 2022",
+  "description": "Add / configure text labels for a map layer",
+  "copyright": "Geodata AS",
   "license": "http://www.apache.org/licenses/LICENSE-2.0",
   "featureActions": []
 }

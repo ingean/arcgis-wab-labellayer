@@ -1,3 +1,15 @@
-.jimu-widget-demo div:first-child{
-  color: red;
+.widget-title {
+  color: black;
+  font-family: 'Avenir Heavy';
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.label-text {
+  color: darkgray;
+  font-size: 1em;
+}
+
+.input-node {
+  padding-top: 1em;
 }
