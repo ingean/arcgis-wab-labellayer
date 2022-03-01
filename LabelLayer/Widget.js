@@ -18,13 +18,18 @@ define([
   'dojo/_base/lang',
   'jimu/BaseWidget',
   'jimu/utils',
+  'jimu/LayerStructure',
+  'jimu/LayerNode',
   'esri/layers/FeatureLayer',
   'esri/tasks/FeatureSet',
   'esri/symbols/TextSymbol',
+  'esri/symbols/Font',
   'esri/layers/LabelClass',
-  'esri/Color'
+  'esri/Color',
+  //'./widgets/LabelLayer/libs/colorize-main/colorize.js',
+  './widgets/CustomWidgets/arcgis-wab-labellayer/LabelLayer/libs/colorize-main/colorize.js'
 ],  
-function(declare, lang, BaseWidget, utils, FeatureLayer, FeatureSet, TextSymbol, LabelClass, Color) {
+function(declare, lang, BaseWidget, utils, LayerStructure, LayerNode, FeatureLayer, FeatureSet, TextSymbol, Font, LabelClass, Color, Gn8Colorize) {
   //To create a widget, you need to derive from BaseWidget.
   return declare([BaseWidget], {
     // DemoWidget code goes here
@@ -33,6 +38,7 @@ function(declare, lang, BaseWidget, utils, FeatureLayer, FeatureSet, TextSymbol,
     //templateString: template,
 
     baseClass: 'jimu-widget-labellayer',
+    layerStructure: LayerStructure.getInstance(),
 
     postCreate: function() {
       this.inherited(arguments);
@@ -42,12 +48,19 @@ function(declare, lang, BaseWidget, utils, FeatureLayer, FeatureSet, TextSymbol,
     startup: function() {
       this.inherited(arguments);
       console.log('startup');
+
+      //utils.loadStyleLink('CSSColorPicker', './widgets/LabelLayer/libs/colorize-main/style.css')
+      utils.loadStyleLink('CSSColorPicker', './widgets/CustomWidgets/arcgis-wab-labellayer/LabelLayer/libs/colorize-main/style.css')
       
       let labelBtn = document.querySelector('#label-btn')
       labelLayerHandler = labelBtn.addEventListener('click', lang.hitch(this,this._labelLayer))
       
       let layerList = document.querySelector('#label-layer-list')
-      layerListHandler = layerList.addEventListener('change', lang.hitch(this, this._populateFieldsList));
+      layerListHandler = layerList.addEventListener('change', lang.hitch(this, this._populateFieldsList))
+
+      let colorInput = document.querySelector('#label-color')
+      colorInputHandler = colorInput.addEventListener('focus', lang.hitch(this, this._initColorPicker))
+
     },
 
     onOpen: function() {
@@ -95,6 +108,30 @@ function(declare, lang, BaseWidget, utils, FeatureLayer, FeatureSet, TextSymbol,
           )
         )
       })
+
+      if (layer.geometryType === 'esriGeometryPoint') {
+        document.querySelector('#label-placement-container').style.display = 'block'
+      } else {
+        document.querySelector('#label-placement-container').style.display = 'none'
+      }
+    },
+
+    _initColorPicker: function() {
+      
+      let data = {
+        "id" : null,
+        "container" : document.querySelector('#colorizer'),
+        "value" : document.querySelector('#label-color').value
+      }
+      let colorizer = new Gn8Colorize(data);
+      colorizer.init().then( 
+        success => {
+          document.querySelector('#label-color').value = success.hex
+          console.log( success );
+        }, error => {
+          console.log( error );
+        } 
+      )
     },
 
     _getSelectedLayer: function() {
@@ -110,13 +147,8 @@ function(declare, lang, BaseWidget, utils, FeatureLayer, FeatureSet, TextSymbol,
     },
 
     _labelLayer: function() {
-      let layerId = document.querySelector('#label-layer-list').value
-      let layerIds = this.map.graphicsLayerIds
-      let layer =  null
-      
-      layerIds.forEach(id => {
-        if (id === layerId) layer = this.map.getLayer(id)
-      })
+      let layer =  this._getSelectedLayer()
+      let layerNode = this.layerStructure.getNodeById(layer.id)
 
       if (!layer instanceof FeatureLayer) {
         this.map.removeLayer(layer)
@@ -126,26 +158,36 @@ function(declare, lang, BaseWidget, utils, FeatureLayer, FeatureSet, TextSymbol,
       
       let labelClass = this._createLabelClass()
       layer.setLabelingInfo([ labelClass ])
-      layer.showLabels = true
+      layerNode.showLabel()  
     },
 
     _createLabelClass: function() {
+      let labelPlacement = document.querySelector('#label-placement').value ?? 'above-right'
       let textFont = document.querySelector('#label-font-list').value
       let textSize = document.querySelector('#label-font-size').value
       let textColor = document.querySelector('#label-color').value
+      let textWeight = document.querySelector('input[name="label-font-weight"]:checked').value ?? 'WEIGHT_NORMAL'
       let labelField = document.querySelector('#label-field-list').value
       
       let reg=/^#([0-9a-f]{3}){1,2}$/i; // Test for hexadecimal color
       textColor = (reg.test(textColor)) ? textColor : '#666'
 
+      let fontWeights = {
+        normal: Font.WEIGHT_NORMAL,
+        bold: Font.WEIGHT_BOLD,
+        bolder: Font.WEIGHT_BOLDER,
+        lighter: Font.WEIGHT_LIGHTER,
+      }
+
       let labelColor = new Color(textColor)
       let labelSymbol = new TextSymbol().setColor(labelColor)
       labelSymbol.font.setSize(`${textSize}pt`)
       labelSymbol.font.setFamily(textFont.toLowerCase())
+      labelSymbol.font.setWeight(fontWeights[textWeight]) 
 
       let json = {
         "labelExpressionInfo": {"value": `{${labelField}}`},
-        "labelPlacement":"above-right"
+        "labelPlacement": labelPlacement
       }
 
       let labelClass = new LabelClass(json)
@@ -164,10 +206,7 @@ function(declare, lang, BaseWidget, utils, FeatureLayer, FeatureSet, TextSymbol,
       let features = []
       layer.graphics.forEach(g => {
         features.push({
-          geometry: {
-            rings: g.geometry.rings,
-            spatialReference: {wkid: g.geometry.spatialReference.wkid}
-          },
+          geometry: g.geometry,
           attributes: g.attributes
         })
       })

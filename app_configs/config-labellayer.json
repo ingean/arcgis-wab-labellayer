@@ -73,7 +73,7 @@
       },
       {
         "label": "Label Layers",
-        "uri": "widgets/CustomWidgets/arcgis-wab-labellayer/Widget"
+        "uri": "widgets/CustomWidgets/arcgis-wab-labellayer/LabelLayer/Widget"
       }
     ]
   }

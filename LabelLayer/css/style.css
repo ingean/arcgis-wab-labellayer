@@ -1,0 +1,35 @@
+.widget-title {
+  color: black;
+  font-family: 'Avenir Heavy';
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.label-text {
+  color: darkgray;
+  font-size: 1em;
+}
+
+.input-node {
+  padding-top: 1em;
+}
+
+input[type="radio"] {
+  display: none;
+}
+input[type="radio"] + label {
+  padding: 2px;
+  border: 1px solid darkgrey;
+  background-color: lightgray;
+  cursor: pointer;
+  display: inline;
+  height: 40px;
+  width: 200px;
+  text-align: center;
+  line-height: 40px;
+}
+input[type="radio"]:checked + label {
+  padding: 2px;
+  border: 2px solid black;
+  background-color: darkgray;
+}

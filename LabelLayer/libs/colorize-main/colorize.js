@@ -1,12 +1,9 @@
-'use strict';
-/**
- * Vanilla JS Advanced Color Picker
- * Part Of Genereight App Generator Frontend Collection
- * @version: 1
- * @author: ali.baradaran@gmail.com
- * Copic® is Registered TM to ©Too Marker Products Inc.
- */
-class Gn8Colorize {
+define([
+
+  ], 
+function() {
+  'use strict';
+  return class Gn8Colorize {
     constructor ( data ) {
         this.toolbox;
         this.promise;
@@ -3567,3 +3564,6 @@ class Gn8Colorize {
         return r;
     }
 }
+
+  
+});

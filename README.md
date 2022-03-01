@@ -1,9 +1,9 @@
 # arcgis-wab-labellayer
 ArcGIS Web AppBuilder Widget for labeling added layers
 
-#### Install
-Copy arcgis-wab-labellayer folder to 
-%WebAppBuilder_Install%/client/stemapp/widgets
+#### Install widget
+- Copy LabelLayer folder to
+> %WebAppBuilder%/client/stemapp/widgets
 
 ## Development
 The widget can be developed further or bugs may be fixed. Follow instructions to set up a development environment.
@@ -28,8 +28,8 @@ node server.js
 ```
 
 #### Debug
-Start ArcGIS Web AppBuilder with the following url:
+- Start ArcGIS Web AppBuilder with the following url:
 ```
-http://localhost:3344/webappbuilder/stemapp/?config=widgets/CustomWidgets/arcgis-wab-labellayer/_test/config-labellayer.json
+http://localhost:3344/webappbuilder/stemapp/?config=widgets/CustomWidgets/arcgis-wab-labellayer/app_configs/config-labellayer.json
 ```
 This opens ArcGIS Web AppBuilder with the widgets needed to develop and test LabelLayer further.
