@@ -19,18 +19,18 @@ The widget can be developed further or bugs may be fixed. Follow instructions to
 - Start Node.js
   - On Windows: 
     - Run startup.bat
-    > %WebAppBuilder%/startup.bat
+      > %WebAppBuilder%/startup.bat
   - On macOS or others:
     - Open terminal
-    - Navigate to /server folder of the ArcGIS Web AppBuilder installation
+    - Navigate to the server folder of the ArcGIS Web AppBuilder installation
+      > %WebAppBuilder%/server folder 
     - Start node by typing
-    ```
-    node server.js
-    ```
+      ```
+      node server.js
+      ```
 
-#### Debug
-- Start ArcGIS Web AppBuilder with the following url:
+#### Debugging
+- Start ArcGIS Web AppBuilder with the following url to access the widgets needed to develop and test:
 ```
 http://localhost:3344/webappbuilder/stemapp/?config=widgets/CustomWidgets/arcgis-wab-labellayer/app_configs/config-labellayer.json
 ```
-This opens ArcGIS Web AppBuilder with the widgets needed to develop and test LabelLayer further.
