@@ -12,20 +12,21 @@ The widget can be developed further or bugs may be fixed. Follow instructions to
 - Download ArcGIS Web AppBuilder 2.23 or newer
 - Unzip to preferred location on disk
 
-#### Install widget
-Copy arcgis-wab-labellayer folder to 
-%WebAppBuilder_Install%/client/stemapp/widgets/CustomWidgets
-
-#### Development (Windows)
-- Start Node.js by running startup.bat from the installed folder
-
-#### Development (macOS)
-- Open terminal
-- Navigate to /server folder of the ArcGIS Web AppBuilder installation
-- Start node by typing
-```
-node server.js
-```
+#### Install widget in develoment environment
+- Create a new folder "CustomWidgets" at
+> %WebAppBuilder_Install%/client/stemapp/widgets/CustomWidgets
+- Copy arcgis-wab-labellayer into "CustomWidgets" folder
+- Start Node.js
+  - On Windows: 
+    - Run startup.bat
+    > %WebAppBuilder%/startup.bat
+  - On macOS or others:
+    - Open terminal
+    - Navigate to /server folder of the ArcGIS Web AppBuilder installation
+    - Start node by typing
+    ```
+    node server.js
+    ```
 
 #### Debug
 - Start ArcGIS Web AppBuilder with the following url:
