@@ -72,7 +72,7 @@
         "uri": "widgets/LayerList/Widget"
       },
       {
-        "label": "Label Layers",
+        "label": "Merk kartobjekter med etiketter",
         "uri": "widgets/CustomWidgets/arcgis-wab-labellayer/LabelLayer/Widget"
       }
     ]
