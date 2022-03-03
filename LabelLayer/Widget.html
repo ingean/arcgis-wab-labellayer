@@ -8,21 +8,22 @@
       </a>
     </div>
   </div>
+  <div id="colorizer"></div>
   <div class="input-node">
-    <label for="label-layer-list" class="input-label label-text">Kartlag</label><br>
-    <select id="label-layer-list" type="dropdown" class="label-input"></select>
+    <label for="label-layer-list" class="input-label">Kartlag</label><br>
+    <select id="label-layer-list" type="dropdown" class="form-input input-select"></select>
   </div>
   <div class="input-node">
-    <label for="label-field-list" class="input-label label-text">Egenskapsfelt</label><br>
-    <select id="label-field-list" class="label-input"></select>
+    <label for="label-field-list" class="input-label">Egenskapsfelt</label><br>
+    <select id="label-field-list" class="form-input input-select"></select>
   </div>
   <div id="label-placement-container" class="input-node" hidden>
-    <label for="label-placement" class="input-label label-text">Plassering</label><br>
-    <select type="text" id="label-placement-list" class="label-input"></select>
+    <label for="label-placement" class="input-label">Plassering</label><br>
+    <select type="text" id="label-placement-list" class="form-input input-select"></select>
   </div>
   <div class="input-node">
-    <label for="label-font-list" class="input-label label-text">Font</label><br>
-    <select type="text" id="label-font-list" class="label-input">
+    <label for="label-font-list" class="input-label">Font</label><br>
+    <select type="text" id="label-font-list" class="form-input input-select">
       <option style="font-family: arial" value="Arial" selected>Arial</option>
       <option style="font-family: verdana" value="Verdana">Verdana</option>
       <option style="font-family: helvetica" value="Helvetica">Helvetica</option>
@@ -36,10 +37,9 @@
     </select>
   </div>
   <div class="input-node">
-    <label for="label-font-size" class="input-label label-text">Størrelse</label><br>
+    <label for="label-font-size" class="input-label">Størrelse</label><br>
     <div class="input-row">
-      <input type="number" min="2" max="100" value="10" id="label-font-size" class="dijit dijitReset dijitInline dijitLeft dijitTextBox">
-      <div class="input-unit input-label label-text"> pt</div>
+      <input type="number" min="2" max="100" value="10" id="label-font-size" class="form-input input-number">
     </div>
   </div>
   <div class="input-node">
@@ -53,15 +53,15 @@
     <label for="font-weight-bolder">Tykkere</label>
   </div>
   <div class="input-node">
-    <label for="label-color" class="input-label label-text">Farge</label><br>
+    <label for="label-color" class="input-label">Farge</label><br>
     <div class="input-row">
-      <input type="text" id="label-color" class="dijit dijitReset dijitInline dijitLeft dijitTextBox" value="#000000">
+      <input type="text" id="label-color" class="form-input input-text-color" value="#000000">
       <div id="label-color-preview" class="color-preview"></div>
     </div>
   </div>
   <div class="input-node">
     <div class="input-row">
-      <div class="input-label label-text">
+      <div class="input-label">
         Aktivere bakgrunnsglød
       </div>
       <label class="switch">
@@ -71,23 +71,19 @@
     </div>
   </div>
   <div class="input-node">
-    <label for="label-halo-size" class="input-label label-text">Glødstørrelse</label><br>
+    <label for="label-halo-size" class="input-label">Glødstørrelse</label><br>
     <div class="input-row">
-      <input type="number" min="1" max="10" value="1" id="label-halo-size" class="dijit dijitReset dijitInline dijitLeft dijitTextBox">
-      <div class="input-unit input-label label-text"> pt</div>
+      <input type="number" min="1" max="10" value="1" id="label-halo-size" class="form-input input-number">
     </div>
   </div>
   <div class="input-node">
-    <label for="label-halo-color" class="input-label label-text">Glødfarge</label><br>
+    <label for="label-halo-color" class="input-label">Glødfarge</label><br>
     <div class="input-row">
-      <input type="text" id="label-halo-color" class="dijit dijitReset dijitInline dijitLeft dijitTextBox" value="#d3d3d3">
+      <input type="text" id="label-halo-color" class="form-input input-text-color" value="#d3d3d3">
       <div id="label-halo-color-preview" class="color-preview"></div>
     </div>
   </div>
   <div class="input-node">
     <input id="label-btn" type="button" class="jimu-btn" value="Oppdatere etiketter">
-  </div>
-  <div class="input-node">
-    <div id="colorizer"></div>
   </div>
 </div>
