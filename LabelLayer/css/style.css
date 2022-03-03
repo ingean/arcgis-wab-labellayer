@@ -60,6 +60,12 @@
   background: #d3d3d3;
 }
 
+.jimu-btn:disabled {
+  background-color: rgb(234, 234, 234);
+  color:#4A4A4A;
+  border-color: #d3d3d3;
+}
+
 /* Radio buttons styled as buttons */
 input[type="radio"] {
   display: none;
@@ -91,7 +97,7 @@ input[type="radio"]:checked + label {
   display: inline-block;
   width: 40px;
   height: 24px;
-  margin-left: auto;
+  margin-left: 136px;
 }
 
 /* Hide default HTML checkbox */

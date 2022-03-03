@@ -74,15 +74,10 @@ function(declare, lang, BaseWidget, utils, LayerStructure, LayerNode, FeatureLay
     },
 
     onOpen: function() {
-      let layerIds = this.map.graphicsLayerIds
-      if (layerIds.length > 0) {
-        lang.hitch(this, this._updateLayerOptions())
-        let selectEl = document.querySelector('#label-layer-list') // Trigger change event
-        selectEl.dispatchEvent(new Event('change'))
-      } else {
-        this.notification.notify('Ingen kartlag kan tekstes', 'Legg til et kartlag som kan tekstes', 'info')
-      }
-    },
+      document.querySelector('#widget-notifications').innerHTML = '' // Delete old notifications
+      document.querySelector('#label-btn').disabled = false;
+      lang.hitch(this, this._updateLayerOptions())    
+      },
 
     onClose: function() {
   
@@ -99,7 +94,17 @@ function(declare, lang, BaseWidget, utils, LayerStructure, LayerNode, FeatureLay
         }
       })
 
-      this._updateSelectOptions('label-layer-list', layers)
+      if (layers.length > 0) {
+        this._updateSelectOptions('label-layer-list', layers)
+        this._updateFieldsAndPlacementOptions()
+      } else {
+        this.notification.notify(
+          'Ingen kartlag kan tekstes', 
+          'Legg til et kartlag som kan tekstes, f.eks ved hjelp av knappen "Legg til data"', 
+          'info'
+        )
+        document.querySelector('#label-btn').disabled = true;
+      }
     },
 
     _updateFieldsAndPlacementOptions: function() {
