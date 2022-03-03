@@ -47,8 +47,10 @@ function(declare, lang, BaseWidget, utils, LayerStructure, LayerNode, FeatureLay
       this.inherited(arguments);
 
       let folderUrl = this.folderUrl
-      folderUrl = folderUrl.substr(folderUrl.indexOf('widgets'))
-
+      if (folderUrl.includes('webappbuilder/stemapp')) {
+        folderUrl = folderUrl.substr(folderUrl.indexOf('widgets'))
+      }
+      
       utils.loadStyleLink('CSSColorPicker', folderUrl + 'libs/colorize-main/style.css')
       utils.loadStyleLink('WidgetNotifications', folderUrl + 'libs/widget-notifications/style.css')
       
