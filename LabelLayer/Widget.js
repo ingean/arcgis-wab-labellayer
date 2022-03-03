@@ -26,20 +26,13 @@ define([
   'esri/symbols/Font',
   'esri/layers/LabelClass',
   'esri/Color',
-  './libs/colorize-main/colorize.js',
-  //'./widgets/CustomWidgets/arcgis-wab-labellayer/LabelLayer/libs/colorize-main/colorize.js',
-  './libs/widget-notifications/notifications.js',
-  //'./widgets/CustomWidgets/arcgis-wab-labellayer/LabelLayer/libs/widget-notifications/notifications.js'
-
+  './libs/colorize-main/colorize',
+  './libs/widget-notifications/notifications'
 ],  
 function(declare, lang, BaseWidget, utils, LayerStructure, LayerNode, FeatureLayer, FeatureSet, TextSymbol, Font, LabelClass, Color, Gn8Colorize, WidgetNotifications) {
   //To create a widget, you need to derive from BaseWidget.
   return declare([BaseWidget], {
-    // DemoWidget code goes here
-   
-    //please note that this property is be set by the framework when widget is loaded.
-    //templateString: template,
-
+    
     baseClass: 'jimu-widget-labellayer',
     layerStructure: LayerStructure.getInstance(),
     pointLabelPlacement: ["above-center", "above-left", "above-right", "below-center", "below-left", "below-right", "center-center", "center-left", "center-right"],
@@ -53,10 +46,11 @@ function(declare, lang, BaseWidget, utils, LayerStructure, LayerNode, FeatureLay
     startup: function() {
       this.inherited(arguments);
 
-      utils.loadStyleLink('CSSColorPicker', './libs/colorize-main/style.css')
-      utils.loadStyleLink('WidgetNotifications', './libs/widget-notifications/style.css')
-      //utils.loadStyleLink('CSSColorPicker', './widgets/CustomWidgets/arcgis-wab-labellayer/LabelLayer/libs/colorize-main/style.css')
-      //utils.loadStyleLink('WidgetNotifications', './widgets/CustomWidgets/arcgis-wab-labellayer/LabelLayer/libs/widget-notifications/style.css')
+      let folderUrl = this.folderUrl
+      folderUrl = folderUrl.substr(folderUrl.indexOf('widgets'))
+
+      utils.loadStyleLink('CSSColorPicker', folderUrl + 'libs/colorize-main/style.css')
+      utils.loadStyleLink('WidgetNotifications', folderUrl + 'libs/widget-notifications/style.css')
       
       document.querySelector('#label-btn')
       .addEventListener('click', lang.hitch(this,this._labelLayer))

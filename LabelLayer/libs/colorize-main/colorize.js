@@ -1,19 +1,25 @@
 define([
-
+  'dojo/_base/declare'
   ], 
-function() {
-  'use strict';
-  return class Gn8Colorize {
-    constructor ( data ) {
-        this.toolbox;
-        this.promise;
-        this.rgb;
-        this.hex;
-        this.name;
-        this.theme = "light";
-        this.promiseResolve;
-        this.promiseReject;
-        this.timer;
+function(declare) {
+  return declare(null, {
+    toolbox: null,
+    promise: null,
+    rgb: null,
+    hex: null,
+    name: null,
+    theme: 'light',
+    promiseResolve: null,
+    promiseReject: null,
+    timer: null,
+    id: null,
+    container: null,
+    value: null,
+    _names: null,
+    data: null,
+
+    constructor: function( data ) {
+       
         if ( typeof data != "object" ) {
             try {
                 this.data = JSON.parse( data );
@@ -2383,8 +2389,9 @@ function() {
         this._prismacolor = ["E6E8E8","#E9E7DD","#EAE8EA","#D9DDE2","#D4D3C9","#D5D3D5","#C7CED5","#C1BFB8","#C2BBBB","#A7B0B8","#ABA4A1","#A299A1","#7C8C8E","#7B6D62","#6D6262","#2D4A5A","#292726","#554A4A","#4DAD44","#008C9E","#7F7315","#FADDB2","#DDA492","#0000000","#520040","#320341","#3B0A12","#568BD2","#94B2D6","#4575BF","#FFBCB8","#A17315","#9F5215","#E9773D","#FFFF6A","#8BBBE0","#DB3129","#ACBD9D","#005895","#C7D35C","#672F17","#315AC7","#481B0F","#C2A9AE","#C7DDEA","#32358B","#006769","#005B8E","#FFF4C8","#880503","#B42830","#8D007B","#431F16","#00512D","#652B84","#422B20","#FEE3E4","#FFD5E3","#FFF1AB","#004993","#2B1A68","#FFEAC6","#008ACF","#533D2E","#E7CEB1","#E8A42C","#158245","#A08C1C","#CAD9CB","#CFBDDC","#994924","#FF8BBF","#230B65","#000059","#002F50","#74BD9F","#FFDD93","#2F6943","#738C1C","#C39BC8","#FEF769","#68CDC4","#94C7EB","#B2DDA9","#FED9C8","#7F633F","#7A66A8","#C6CD55","#A12049","#8C0821","#676210","#007E9E","#AC8B3C","#E68C3F","#6E6D13","#A9007B","#51B7C3","#E2947B","#FF7716","#FF34C0","#FFFF3B","#00BBD4","#3E5939","#FF6E12","#DDEAC6","#FA6610","#8E69BA","#00B092","#F1A78D","#F8E4D6","#00739A","#004729","#F60000","#50549B","#F3889E","#ECB7C1","#870038","#FF4908","#C3D8EE","#D74893","#DE6619","#DECDC7","#A31719","#D1BDC1","#113B15","#F9AF9C","#FAE0B7","#866210","#78A87C","#D22909","#F4D1C4","#352D14","#9F430A","#A3A1A3","#B1E1F0","#347E8F","#FFC12A","#85CF66","#FFD62F","#A14107","#007EB4","#0BBF7E","#6F2436","#19189E","#44308F","#000092","#FFFFFF","#FFF991","#DAAD41","#FFA723"];
         this._ral = ["#CCC58F","#D1BC8A","#D2B773","#F7BA0B","#E2B007","#C89F04","#E1A100","#E79C00","#AF8A54","#D9C022","#E9E5CE","#DFCEA1","#EADEBD","#EAF044","#F4B752","#F3E03B","#A4957D","#9A9464","#EEC900","#F0CA00","#B89C50","#F5FF00","#A38C15","#FFAB00","#DDB20F","#FAAB21","#EDAB56","#A29985","#927549","#EEA205","#DD7907","#BE4E20","#C63927","#FA842B","#E75B12","#FF2300","#FFA421","#F3752C","#E15501","#D4652F","#EC7C25","#DB6A50","#954527","#AB2524","#A02128","#A1232B","#8D1D2C","#701F29","#5E2028","#402225","#703731","#7E292C","#CB8D73","#9C322E","#D47479","#E1A6AD","#AC4034","#D3545F","#D14152","#C1121C","#D56D56","#F70000","#FF0000","#B42041","#E72512","#AC323B","#711521","#B24C43","#8A5A83","#933D50","#D15B8F","#691639","#83639D","#992572","#4A203B","#904684","#A38995","#C63678","#8773A1","#6B6880","#384C70","#1F4764","#2B2C7C","#2A3756","#1D1F2A","#154889","#41678D","#313C48","#2E5978","#13447C","#232C3F","#3481B8","#232D53","#6C7C98","#2874B2","#0E518D","#21888F","#1A5784","#0B4151","#07737A","#2F2A5A","#4D668E","#6A93B0","#296478","#102C54","#327662","#28713E","#276235","#4B573E","#0E4243","#0F4336","#40433B","#283424","#35382E","#26392F","#3E753B","#68825B","#31403D","#797C5A","#444337","#3D403A","#026A52","#468641","#48A43F","#B7D9B1","#354733","#86A47C","#3E3C32","#008754","#53753C","#005D52","#81C0BB","#2D5546","#007243","#0F8558","#478A84","#7FB0B2","#1B542C","#005D4C","#25E712","#00F700","#7E8B92","#8F999F","#817F68","#7A7B6D","#9EA0A1","#6B716F","#756F61","#746643","#5B6259","#575D57","#555D61","#596163","#555548","#51565C","#373F43","#2E3234","#4B4D46","#818479","#474A50","#374447","#939388","#5D6970","#B9B9A8","#818979","#939176","#CBD0CC","#9A9697","#7C7F7E","#B4B8B0","#6B695F","#9DA3A6","#8F9695","#4E5451","#BDBDB2","#91969A","#82898E","#CFD0CF","#888175","#887142","#9C6B30","#7B5141","#80542F","#8F4E35","#6F4A2F","#6F4F28","#5A3A29","#673831","#49392D","#633A34","#4C2F26","#44322D","#3F3A3A","#211F20","#A65E2F","#79553C","#755C49","#4E3B31","#763C28","#FDF4E3","#E7EBDA","#F4F4F4","#282828","#0A0A0A","#A5A5A5","#8F8F8F","#FFFFFF","#1C1C1C","#F6F6F6","#1E1E1E","#D7D7D7","#9C9C9C","#828282"];
         this._ncs = ["#f7f7f7","#f2f2f2","#f5fbff","#f7fffe","#f4fff8","#fdfff6","#fff1f2","#fef6fd","#fffdf6","#fef8f4","#e8f6fe","#eafbff","#ecfffe","#eafffa","#e4ffef","#ecffec","#f1ffeb","#f4ffea","#f7ffe9","#faffea","#fcffeb","#feffeb","#fffeec","#fefdeb","#ffdee0","#ffdfe3","#ffe1e7","#ffe3ec","#fee6f2","#ffeafb","#f8e9fe","#f0e8ff","#e1e6ff","#e3ecfe","#fffbea","#fffaea","#fff7e9","#fff5e8","#fff3e6","#fff0e5","#feede4","#ffe9e2","#fee5e0","#ffe2e0","#dff3ff","#e3faff","#e2fff8","#dbffe9","#f4ffe0","#fffee4","#ffd2d5","#ffd6de","#ffddee","#f5e0ff","#d6ddff","#fffae3","#fff5e0","#ffeedd","#ffe6da","#fedcd5","#d3eeff","#d6f4ff","#d9fbff","#dafffd","#d8fef9","#d1ffea","#cdffe0","#dbffdc","#e4ffd9","#ebffd6","#f0ffd4","#f5ffd6","#f9ffd8","#fdffd9","#fffdda","#fefbd8","#ffc2c6","#ffc4cb","#ffc7d2","#ffcbdb","#ffd0e7","#ffd7f7","#f1d4ff","#e3d4ff","#c6d1ff","#cbdcff","#fff9d8","#fff5d6","#fff1d4","#ffedd2","#ffe8d0","#ffe3ce","#ffddcc","#fed7c9","#ffd0c6","#ffc9c5","#c0e7ff","#c5f5fe","#c8fffd","#c4fff1","#b8ffd4","#d8ffc8","#eaffc1","#f7fec6","#fffdc8","#fff9c7","#feaaaf","#feadb7","#feb1c0","#ffbcdd","#ebc1ff","#b0befe","#b6ceff","#fff6c6","#fff1c4","#ffebc1","#ffe5bf","#ffdebc","#ffd7b9","#ffcfb6","#ffc6b3","#ffbdaf","#ffb4ae","#aee0ff","#b2ebff","#b6f8ff","#b8fcff","#b8fffc","#b7fff8","#b5fff4","#abffd9","#a5ffc8","#bdffc0","#cdffb9","#daffb4","#e4ffb0","#edffb3","#f4feb5","#fbffb8","#fffcb8","#fff7b6","#ff959c","#ff98a5","#ff9cb0","#ffa2c0","#ffa9d4","#ffb4f0","#e5b0ff","#cbb0ff","#9caeff","#a3c1ff","#fff3b5","#feedb2","#ffe5b0","#ffddad","#ffd5aa","#ffcca7","#ffc2a3","#ffb89f","#ffac9b","#ffa19b","#e09ffe","#c1a0ff","#8ed4ff","#92e3ff","#98f5ff","#9afcff","#9afffb","#98fff5","#96ffef","#8bffcb","#84ffb4","#a3ffa7","#baff9e","#cbff96","#dafe90","#e6ff93","#f0fe96","#f9fe99","#fefb9a","#fef598","#ff737c","#ff7687","#fe7b95","#ff81a9","#fe89c4","#ff95ea","#7a92ff","#81aaff","#ffef96","#fee593","#ffdb90","#ffd08d","#fec589","#feb986","#feac82","#ff9f7e","#ff9079","#ff8279","#72caff","#76dcff","#7cf2ff","#68ffa3","#8eff93","#a9ff86","#bfff7c","#d0ff74","#dfff77","#ecff7a","#f8fe7d","#fffa7e","#fff27c","#ff5863","#ff5b6f","#ff5f7f","#ff6596","#6598ff","#ffeb7a","#ffdf77","#ffd274","#ffc571","#ffb76d","#ffa96a","#fe9a66","#ff8a62","#ff7a5e","#ff695f","#7bff81","#9aff71","#b3ff65","#c8ff5b","#daff5e","#e8ff61","#f7ff64","#fffa65","#ffef62","#ff424e","#ff455b","#ffe761","#ffd95e","#ffca5b","#ffbb58","#ffab55","#ff9b52","#ff8a4e","#fe794b","#ff6747","#ff5549","#6bff71","#8eff5f","#a9ff51","#c0ff45","#d4ff47","#e5ff4a","#f6ff4d","#fff94d","#ffed4b","#ff303e","#fee34a","#ffd347","#ffc345","#ffb242","#ffa140","#fe8f3d","#ff7d3a","#ff6a37","#ff5734","#ff4437","#63ff6a","#d2ff3d","#ff2836","#82ff4f","#a1ff3f","#baff31","#e2ff35","#f4ff37","#fff837","#ffeb36","#ffe035","#ffcf33","#ffbd31","#feaa2f","#fe982d","#ff852b","#ff7128","#ff5e26","#fe4a24","#fe3628","#7dff48","#b7ff28","#e1ff2b","#f4ff2d","#ffea2c","#99ff2e","#ffdd22","#ffca20","#ffca20","#feb71f","#feb71f","#ffa31d","#ff901c","#ff7b1b","#ff6719","#ff5318","#ff3e16","#ff2a1b","#ffb416","#ffa015","#fe8c14","#ff7713","#ff6212","#ff4e11","#ff3910","#f7fcef","#fcfbf0","#fceaed","#fcedf4","#f8effc","#e9edfc","#fcf8ef","#fcf5ed","#fcf1eb","#fcede9","#e8f6f6","#ecf6e7","#f4f6e7","#f6f5e7","#f6dee1","#f6e1e8","#f6e7f3","#ebe5f6","#e1e8f6","#f6f3e6","#f6efe5","#f6ebe3","#f6e6e0","#f6e0de","#d9eff4","#d8f4ee","#e1f4da","#f0f4d9","#f4f1da","#f4cbd0","#f4d0db","#f4d9ef","#e0d6f4","#d0dcf4","#f4edd8","#f4e8d5","#f4e1d2","#f4d8cf","#f4cecc","#e5e5e5","#e8eef1","#e8eef1","#eaf1f1","#e7f1eb","#e7f1eb","#eff1e9","#f1e4e5","#f1e4e5","#f1e9f0","#f1f0e9","#f1ebe7","#dce9f1","#deeef1","#dff1f1","#ddf1ed","#ddf1ed","#d8f1e2","#dff1e0","#e4f1de","#e4f1de","#e7f1dd","#eaf1dc","#edf1dd","#eef1de","#f0f1df","#f1f1df","#f1f1df","#f1efdf","#f1d2d4","#f1d3d7","#f1d5db","#f1d5db","#f1d7e0","#f1dae6","#f1deed","#eadcf1","#e3dcf1","#d5daf1","#d7e0f1","#f1eede","#f1ecdd","#f1eadc","#f1eadc","#f1e8db","#f1e6da","#f1e3d9","#f1e0d8","#f1ddd6","#f1d9d4","#f1d6d4","#c8e2f1","#cae7f1","#cdeef1","#cef1f0","#ccf1ec","#c6f1de","#c2f1d5","#cff1d1","#d8f1cd","#def1cb","#e4f1c9","#e8f1cb","#ecf1cc","#eff1ce","#f1f0ce","#f1eecd","#f1b8bb","#f1bac0","#f1bdc7","#f1c0d0","#f1c5db","#f1ccea","#e4c9f1","#d7c8f1","#bcc6f1","#c1d1f1","#f1eccc","#f1e8cb","#f1e4c9","#f1e0c7","#f1dcc5","#f1d7c3","#f1d1c1","#f1cbbe","#f1c5bc","#f1bebb","#b6dbf1","#bbe8f1","#bef1ef","#baf1e5","#aef1c8","#cdf1be","#def1b7","#eaf1bc","#f1f0be","#f1ecbd","#f1a1a6","#f1a4ad","#f1a7b6","#f1b2d2","#dfb7f1","#a6b4f1","#acc3f1","#f1e9bb","#f1e4b9","#f1dfb7","#f1d9b5","#f1d2b2","#f1cbb0","#f1c4ad","#f1bca9","#f1b3a6","#f1aaa5","#a5d5f1","#a8dff1","#adebf1","#afeff1","#aef1ef","#adf1eb","#abf1e7","#a2f1ce","#9cf1bd","#b3f1b5","#c2f1af","#cef1aa","#d8f1a6","#e1f1a9","#e7f1ac","#eef1ae","#f1efae","#f1eaad","#f18d94","#f1909c","#f194a7","#f19ab5","#f1a1c9","#f1aae4","#d9a7f1","#c1a7f1","#93a5f1","#9ab7f1","#f1e7ab","#f1e0a9","#f1d9a7","#f1d2a4","#f1caa1","#f1c19e","#f1b89a","#f1ae97","#f1a393","#f19892","#86c9f1","#8bd7f1","#90e8f1","#92eef1","#92f1ee","#90f1e8","#8ef1e2","#84f1c0","#7df1aa","#9bf19f","#b0f195","#c1f18e","#cef188","#daf18b","#e3f18e","#ecf191","#f1ee92","#f1e890","#f16d76","#f17080","#f1748d","#f17aa0","#f182b9","#f18dde","#d088f1","#ae8af1","#738bf1","#7aa1f1","#f1e28e","#f1d98b","#f1d088","#f1c585","#f1bb82","#f1af7f","#f1a37b","#f19677","#f18973","#f17b73","#6cbff1","#70d0f1","#73dcf1","#75e5f1","#77eef1","#77f1ed","#75f1e6","#74f1de","#71f1d5","#69f1b4","#63f19a","#86f18b","#a0f17f","#b5f175","#c5f16e","#d4f171","#dff174","#ebf177","#f1ed77","#f1e575","#f1535e","#f15669","#f15a79","#f1608e","#f167ac","#f172d9","#c76ef1","#9e72f1","#5975f1","#6090f1","#f1de74","#f1d371","#f1c76e","#f1bb6b","#f1ae67","#f1a064","#f19260","#f1835d","#f17359","#f1645a","#54b6f1","#58caf1","#5bd8f1","#5de3f1","#5fedf1","#5ff1ec","#5df1e3","#5cf1db","#59f1cf","#52f1aa","#4cf18c","#75f17a","#75f17a","#92f16b","#92f16b","#aaf160","#bdf156","#cef159","#dcf15c","#eaf15f","#f1ed5f","#f1e35d","#f13f4a","#f14157","#f14567","#f1497f","#f150a1","#4a81f1","#f1db5c","#f1cd59","#f1c056","#f1b153","#f1a250","#f1934d","#f1834a","#f17247","#f16143","#f15045","#47f1a5","#40aff1","#39f180","#65f16b","#86f15a","#a0f14c","#b6f141","#c9f144","#d9f146","#e9f149","#f1ec49","#f1e147","#f12e3a","#f13047","#f13259","#f13672","#f1d746","#f1c844","#f1b941","#f1a93f","#f1983c","#f1883a","#f17637","#f16534","#f15331","#f14134","#57f15e","#7bf14b","#98f13b","#b0f12e","#c5f130","#d6f132","#e8f134","#f1eb35","#f1df33","#f11f2d","#f1213a","#f1234c","#f1d432","#f1c430","#f1b32e","#f1a12c","#f1902a","#f17e28","#f16b26","#f15924","#f14622","#f13326","#76f144","#adf126","#c3f127","#d5f129","#e7f12b","#f1eb2b","#f1de2a","#91f12c","#f11322","#f1d220","#f1c01e","#f1ad1d","#f19b1c","#f1881b","#f17519","#f16218","#f14e16","#f13b15","#f1281a","#f1360f","#f12214","#d8d8d8","#dbe1e4","#dde4e3","#dae4de","#e2e4dc","#e4d7d8","#e4dce2","#e4e3dc","#e4deda","#e4e3d3","#e4e2d2","#e4e1d2","#e4dfd1","#e4ddd0","#e4dbcf","#e4d9ce","#e4d7cd","#e4d4cc","#e4d1ca","#e4cdc9","#e4cac8","#bdd5e4","#c1dee4","#c3e4e3","#c0e4dc","#b8e4c9","#cce4c2","#d7e4be","#dfe4c1","#e4e3c3","#e4e0c2","#e4adb1","#e4afb6","#e4b2bc","#e4bacf","#d8bee4","#b2bbe4","#b6c5e4","#e4dec1","#e4dbbf","#e4d8be","#e4d4bc","#e4d0ba","#e4cbb8","#e4c6b6","#e4c0b4","#e4bab1","#e4b4b1","#accfe4","#b1dbe4","#b3e4e2","#afe4d8","#a5e4bd","#c1e4b3","#d1e4ad","#dde4b1","#e4e2b3","#e4dfb2","#e4989d","#e49ba3","#e49eac","#e4a8c6","#d2ade4","#9daae4","#a3b8e4","#e4dcb1","#e4d7af","#e4d2ad","#e4cdab","#e4c7a8","#e4c0a6","#e4b9a3","#e4b1a0","#e4a99d","#e4a19c","#8857e4","#405ee4","#49bce4","#824ee4","#3757e4","#346ee4","#33a1e4","#2de474","#e41931","#e41220","#e43814","#e42518","#cccccc","#cfd3d6","#d0d6d6","#cdd6d1","#d5d6cf","#d6cbcb","#d6cfd5","#d6d5cf","#d6d1cd","#c3cfd6","#c5d3d6","#c5d3d6","#c6d6d6","#c5d6d2","#c5d6d2","#c0d6c9","#c6d6c7","#cbd6c6","#cbd6c6","#ced6c5","#d0d6c4","#d2d6c5","#d4d6c6","#d6d6c6","#d6d6c6","#d6d5c6","#d6bbbc","#d6bcbf","#d6bdc2","#d6bdc2","#d6bfc7","#d6c2cc","#d6c5d3","#d6c5d3","#d0c4d6","#cac3d6","#bdc2d6","#c0c7d6","#d6d4c5","#d6d2c5","#d6d0c4","#d6cfc3","#d6ccc2","#d6cac1","#d6cac1","#d6c7c0","#d6c4be","#d6c1bd","#d6bebc","#b2c9d6","#b4ced6","#b6d3d6","#b7d6d5","#b6d6d1","#b0d6c5","#add6bd","#b8d6b9","#c0d6b7","#c6d6b4","#cad6b3","#ced6b4","#d2d6b6","#d5d6b7","#d6d5b7","#d6d3b6","#d6a3a6","#d6a5ab","#d6a8b1","#d6abb9","#d6afc3","#d6b5d0","#cbb3d6","#bfb2d6","#a7b0d6","#abb9d6","#d6d1b6","#d6ceb4","#d6cbb3","#d6c7b1","#d6c3af","#d6bfae","#d6baac","#d6b5a9","#d6afa7","#d6a9a6","#92bdd6","#96c6d6","#9ad1d6","#9bd5d6","#9bd6d4","#9ad6d1","#98d6cd","#90d6b7","#8bd6a8","#9fd6a1","#add69c","#b7d697","#c0d694","#c8d696","#ced699","#d3d69b","#d6d49b","#d6d09a","#d67e83","#d6808b","#d68494","#d688a1","#d68fb3","#d697ca","#c194d6","#ab94d6","#8392d6","#89a2d6","#d6cd98","#d6c796","#d6c194","#d6bb92","#d6b38f","#d6ac8c","#d6a389","#d69b86","#d69183","#d68882","#77b3d6","#7bbfd6","#80ced6","#82d4d6","#81d6d3","#80d6ce","#7ed6c9","#75d6ab","#6fd697","#8ad68d","#9cd685","#abd67e","#b7d679","#c2d67c","#cad67f","#d2d681","#d6d481","#d6ce80","#d66168","#d66471","#d6677e","#d66c8e","#d673a5","#d67dc5","#b979d6","#9b7bd6","#677bd6","#6d8fd6","#d6c97e","#d6c17c","#d6b979","#d6b076","#d6a674","#d69c70","#d6916d","#d6856a","#d67966","#d66d66","#60aad6","#64b9d6","#66c4d6","#68ccd6","#6ad3d6","#6ad6d3","#68d6cc","#67d6c6","#65d6bd","#5dd6a0","#58d689","#77d67c","#8ed671","#a0d668","#afd661","#bcd664","#c7d667","#d1d66a","#d6d36a","#d6cc68","#d64a53","#d64d5d","#d6506b","#d6557e","#d65c99","#d666c1","#b162d6","#8d65d6","#4f68d6","#5580d6","#d6c667","#d6bc64","#d6b162","#d6a65f","#d69a5c","#d68e59","#d68156","#d67452","#d6664f","#d65950","#4ba2d6","#4fb4d6","#51c0d6","#53cad6","#55d3d6","#55d6d2","#53d6ca","#51d6c3","#4fd6b8","#49d697","#44d67d","#68d66c","#82d660","#97d655","#a8d64d","#b7d64f","#c4d652","#d0d654","#d6d255","#d6ca53","#d63842","#d63a4d","#d63d5c","#d64171","#d6478f","#d650bd","#aa4dd6","#8052d6","#3c59d6","#4172d6","#d6c251","#d6b74f","#d6aa4d","#d69e4a","#d69047","#d68345","#d67442","#d6663f","#d6573c","#d6483e","#45b1d6","#399bd6","#41d6d1","#3ed6c0","#37d68f","#32d672","#5ad65f","#77d650","#8fd644","#a2d63a","#b3d63c","#c1d63e","#cfd640","#d6d241","#d6c83f","#d62934","#d62a3f","#d62d4f","#d63065","#d63586","#7642d6","#2c4cd6","#3067d6","#d6c03e","#d6b23c","#d6a43a","#d69638","#d68835","#d67933","#d66931","#d6592e","#d6492c","#d6392f","#3098d6","#d62649","#2962d6","#4ed654","#6ed643","#87d635","#9dd629","#afd62b","#bed62d","#ced62e","#d6d12f","#d6c62d","#d61c28","#d61d34","#d6bd2c","#d6ae2b","#d69f29","#d68f27","#d68026","#d67024","#d65f22","#d64f20","#d63e1e","#d62d22","#69d63c","#84d62e","#d65b1b","#d64a1a","#bfbfbf","#c2c6c9","#c0c9c4","#c9bebf","#c9c8c2","#43b3c9","#44bcc9","#46c5c9","#44c9bd","#41c9ab","#28c967","#2341c9","#67c93e","#7fc931","#c91a25","#c98725","#c97823","#c96922","#c95920","#c94a1e","#c93a1c","#c92b20","#b2b2b2","#adb9bc","#acbcb8","#b1bcad","#b8bcac","#bcbbae","#bca6aa","#bcacb9","#a5aabc","#bcb6ab","#bcb1a9","#bca9a5","#9cb0bc","#9db4bc","#a0b9bc","#a0bcbb","#9fbcb7","#9abcad","#97bca5","#a1bca2","#a8bca0","#adbc9e","#b1bc9c","#b5bc9e","#b8bc9f","#babca0","#bcbba0","#bcb9a0","#bc8f92","#bc9096","#bc939b","#bc96a2","#bc99aa","#bc9eb6","#b29cbc","#a79cbc","#929abc","#96a2bc","#bcb79f","#bcb59e","#bcb29c","#bcae9b","#bcab9a","#bca798","#bca396","#bc9e94","#bc9992","#bc9491","#80a5bc","#83adbc","#86b7bc","#88babc","#88bcba","#86bcb7","#85bcb3","#7ebca0","#7abc93","#8bbc8d","#97bc88","#a1bc84","#a8bc81","#afbc84","#b4bc86","#b9bc87","#bcba88","#bcb686","#bc6e73","#bc7079","#bc7382","#bc778d","#bc7d9c","#bc84b1","#a982bc","#9682bc","#7380bc","#788ebc","#bcb385","#bcae83","#bca982","#bca37f","#bc9d7d","#bc967b","#bc8f78","#bc8775","#bc7f72","#bc7772","#689cbc","#6ca7bc","#70b4bc","#71b9bc","#71bcb9","#70bcb5","#6ebcb0","#66bc95","#61bc84","#78bc7b","#89bc74","#96bc6e","#a0bc6a","#a9bc6c","#b1bc6f","#b8bc71","#bcb971","#bcb470","#bc555b","#bc5763","#bc5a6e","#bc5f7c","#bc6590","#bc6dad","#a26abc","#876bbc","#5a6cbc","#5f7ebc","#bcb06e","#bca96c","#bca16a","#bc9a68","#bc9165","#bc8862","#bc7f5f","#bc755c","#bc6a59","#bc6059","#5495bc","#57a2bc","#59abbc","#5bb3bc","#5db9bc","#5dbcb8","#5bbcb3","#5abcad","#58bca5","#52bc8c","#4dbc78","#68bc6c","#7dbc63","#8cbc5b","#99bc55","#a5bc58","#aebc5a","#b7bc5c","#bcb95d","#bcb25b","#bc4149","#bc4352","#bc465e","#bc4a6e","#bc5086","#bc59a9","#9b55bc","#7b58bc","#455bbc","#4b70bc","#bcad5a","#bca458","#bc9b55","#bc9153","#bc8750","#bc7c4e","#bc714b","#bc6648","#bc5a45","#bc4d46","#428ebc","#459dbc","#47a8bc","#49b1bc","#4ab8bc","#4abcb8","#49bcb1","#47bcaa","#45bca1","#40bc84","#3bbc6d","#5bbc5f","#72bc54","#84bc4a","#93bc43","#a0bc45","#abbc47","#b6bc4a","#bcb84a","#bcb048","#bc313a","#bc3343","#bc3550","#bc3963","#bc3e7d","#bc46a5","#9543bc","#7048bc","#354ebc","#3964bc","#bcaa47","#bca045","#bc9543","#bc8a41","#bc7e3e","#bc723c","#bc663a","#bc5937","#bc4c34","#bc3f36","#41bcb7","#bc315d","#bc3679","#bc3ea3","#3188bc","#3499bc","#36a5bc","#37afbc","#39b8bc","#36bca8","#30bc7d","#2cbc64","#4fbc53","#68bc46","#7dbc3b","#8ebc33","#9cbc35","#a9bc36","#b5bc38","#bcb739","#bcaf37","#bc232d","#bc2537","#bc2745","#673abc","#2742bc","#2a5abc","#bca836","#bc9c34","#bc9033","#bc8331","#bc772f","#bc692d","#bc5c2b","#bc4e29","#bc4026","#bc3229","#49bc4e","#8bbc2b","#9bbc2d","#a8bc2f","#2456bc","#bc8d2b","#a5a5a5","#a8acae","#a7aeaa","#aea5a5","#aeada9","#3baea4","#39ae94","#8836ae","#29ae5d","#49ae4d","#61ae41","#74ae37","#84ae2f","#91ae31","#9dae33","#a8ae34","#ae212a","#243dae","#2754ae","#ae9c32","#ae852f","#ae7a2d","#ae6e2b","#ae622a","#ae5528","#ae4926","#ae3c24","#ae2f26","#999999","#949fa1","#94a19e","#98a194","#9ea194","#a1a095","#a18e92","#a1949e","#8e91a1","#a19c93","#a19891","#a1918e","#879aa1","#899fa1","#89a1a0","#88a19d","#84a194","#8aa18b","#94a187","#9ba187","#a0a189","#a19e89","#a17c80","#a1808b","#a1889c","#8f86a1","#808ba1","#a19b87","#a19585","#a18f82","#a1887f","#a17f7d","#6e8ea1","#7094a1","#739da1","#74a19f","#72a19a","#6ca189","#68a17e","#77a179","#8aa171","#96a171","#9fa174","#a19c73","#a15e62","#a16068","#a1636f","#a16679","#a16b86","#a17298","#916fa1","#806fa1","#626ea1","#677aa1","#a19a72","#a19571","#a1916f","#a18c6d","#a1876b","#a18169","#a17b67","#a17464","#a16d62","#a16662","#5a86a1","#5c8fa1","#609ba1","#61a19f","#5fa197","#58a180","#53a171","#67a16a","#80a15f","#91a15d","#9ea161","#a19a60","#a1494e","#a14b55","#a14d5e","#a1516b","#a1567c","#a15e94","#8b5ba1","#745ca1","#4d5ca1","#516ca1","#a1975f","#a1915d","#a18a5b","#a18459","#a17c57","#a17554","#a16d52","#a1644f","#a15b4c","#a1524d","#487fa1","#4b8ba1","#4d93a1","#4e99a1","#509ea1","#4fa19e","#4ea199","#4da194","#4ba18e","#46a178","#42a167","#59a15d","#6ba155","#78a14e","#83a149","#8da14b","#95a14d","#9da14f","#a19e50","#a1994e","#a1383e","#a13946","#a13c50","#a1405f","#a14573","#a14c91","#8549a1","#694ca1","#3b4ea1","#4060a1","#a1944d","#a18d4b","#a18549","#a17c47","#a17445","#a16b43","#a16140","#a1573e","#a14d3b","#a1423c","#387aa1","#3b87a1","#3d90a1","#3e98a1","#3f9ea1","#3fa19e","#3ea198","#3da192","#3ca18a","#36a171","#33a15d","#4ea151","#62a148","#71a140","#7ea139","#89a13b","#93a13d","#9ca13f","#a19e3f","#a1973e","#a12a31","#a12b3a","#a12e45","#a13154","#a1356b","#a13c8e","#8039a1","#603ea1","#2d42a1","#3156a1","#a1923d","#a1893b","#a18039","#a17637","#a16c36","#a16233","#a15731","#a14c2f","#a1412d","#a1362e","#3177a1","#389ea1","#5c37a1","#2d5fa1","#a18734","#8c8c8c","#8e9193","#8d9390","#938b8c","#93938f","#336f93","#388493","#398b93","#3a9193","#3a9390","#37937f","#329368","#2e9356","#47934b","#599342","#68933a","#749335","#7e9336","#879338","#8f933a","#583993","#293d93","#2d4f93","#938638","#936c33","#936331","#935a2f","#93502d","#93462b","#933b29","#93312a","#7f7f7f","#7b8486","#7b8684","#7f867c","#83867b","#86867c","#86767a","#867b84","#767986","#86827a","#867e79","#867976","#708186","#728486","#738685","#718683","#6e867b","#738674","#7c8671","#818671","#858672","#868472","#86676b","#866b74","#867182","#776f86","#6b7486","#868171","#867d6f","#86776d","#86716a","#866a68","#5c7686","#5e7c86","#608286","#618685","#5f8680","#5a8672","#578669","#638665","#73865f","#7d865e","#848661","#868260","#864e52","#865057","#86525d","#865565","#865970","#865f7e","#795d86","#6b5d86","#525b86","#556586","#86805f","#867d5e","#86795c","#86755b","#867059","#866b58","#866656","#866154","#865b52","#865551","#4b7086","#4d7786","#508186","#518684","#4f867e","#49866b","#45865f","#568658","#6b864f","#79864d","#838651","#868150","#863c41","#863e47","#86404e","#864459","#864867","#864e7b","#734c86","#614d86","#404d86","#445a86","#867e4f","#86794d","#86734c","#866e4a","#866848","#866146","#865b44","#865342","#864c40","#864440","#3c6a86","#3e7486","#407a86","#418086","#428486","#428684","#418680","#40867c","#3f8676","#3a8664","#378656","#4b864d","#598646","#648641","#6e863d","#76863f","#7c8640","#838642","#868442","#867f41","#862e34","#86303a","#863243","#86354f","#863960","#863f78","#6f3d86","#583f86","#324186","#355086","#867c40","#86753f","#866f3d","#86683b","#866039","#865937","#865135","#864933","#864031","#863732","#377286","#727272","#747779","#747976","#797272","#797875","#366079","#386879","#396e79","#3b7379","#3c7779","#3c7977","#38796a","#34795a","#31794d","#437945","#50793f","#5a793b","#637937","#6a7938","#70793a","#76793b","#4f3979","#304879","#79322d","#666666","#636a6b","#626b69","#656b63","#696b62","#6b6b63","#6b5f61","#6b636a","#5f616b","#6b6862","#6b6560","#6b615e","#5a676b","#5b6a6b","#5c6b6b","#5b6b69","#586b63","#5c6b5d","#636b5a","#676b5a","#6a6b5c","#6b6a5b","#6b5356","#6b565c","#6b5a68","#5f596b","#565d6b","#6b675a","#6b6459","#6b5f57","#6b5a55","#6b5553","#495e6b","#4b636b","#4d686b","#4d6b6a","#4c6b67","#486b5b","#456b54","#4f6b51","#5c6b4c","#646b4b","#6a6b4d","#6b684d","#6b3f42","#6b4045","#6b424a","#6b4451","#6b4759","#6b4c65","#614a6b","#564a6b","#41496b","#44516b","#6b674c","#6b644b","#6b614a","#6b5d49","#6b5a47","#6b5646","#6b5245","#6b4d43","#6b4841","#6b4441","#3c596b","#3e606b","#40676b","#416b6a","#3f6b65","#3a6b55","#376b4c","#456b46","#566b3f","#616b3e","#696b40","#6b6740","#6b3034","#6b3239","#6b343f","#6b3647","#6b3a52","#6b3e63","#5c3d6b","#4d3d6b","#333d6b","#36486b","#6b653f","#6b613e","#6b5c3d","#6b583b","#6b533a","#6b4e38","#6b4836","#6b4335","#6b3d33","#6b3733","#3a6b67","#595959","#5a5d5e","#5a5e5b","#5e5959","#5e5d5b","#385a5e","#395e5d","#3c5e3e","#555e36","#4c4c4c","#4a4f50","#4a504f","#4c504a","#4f504a","#50504a","#504749","#504a4f","#474950","#504e4a","#504c48","#504947","#434d50","#444f50","#455050","#44504f","#42504a","#455046","#4a5044","#4e5044","#505045","#504f44","#503e40","#504045","#50444e","#484350","#404650","#504d44","#504b42","#504841","#50443f","#503f3e","#374750","#384a50","#3a4e50","#3a5050","#39504d","#365045","#34503f","#3c503c","#455039","#4b5038","#4f503a","#504e3a","#502f31","#503034","#503138","#50333c","#503543","#50394c","#483750","#403750","#313750","#333d50","#504d39","#504b38","#504837","#504637","#504336","#504035","#503d33","#503a32","#503631","#503331","#3f3f3f","#414243","#404341","#433f40","#434341","#323232","#313536","#313635","#333632","#353631","#363632","#362f31","#363135","#2f3036","#363431","#363330","#36302f","#2d3336","#2e3536","#2e3635","#2d3634","#2c3631","#2e362e","#31362d","#34362d","#35362e","#36352e","#36292b","#362b2e","#362d34","#302d36","#2b2e36","#36342d","#36322c","#36302b","#362d2a","#362a2a","#262626","#262626","#272828","#272827","#282626","#282827","#252828","#252828","#262825","#282825","#282425","#242428","#282725","#282423"];
-    }
-    init () {
+    },
+
+    init: function() {
         this.promise = new Promise ( ( resolve, reject ) => {
             this.promiseResolve = resolve;
             this.promiseReject = reject;
@@ -2442,8 +2449,9 @@ function() {
             );
         } );
         return this.promise;
-    }
-    create () {
+    },
+
+    create: function() {
         return new Promise( ( resolve, reject ) => {
             var palette = ``;
             var condition = true;
@@ -2482,8 +2490,9 @@ function() {
             }
             resolve();
         } );
-    }
-    createPicker () {
+    },
+
+    createPicker: function() {
         var container = this.toolbox.querySelector( ".gn8-colorize-tool-container" );
         var html = function () {
             return new Promise( ( resolve, reject ) => {
@@ -2881,8 +2890,9 @@ function() {
                 update();
             },error => {}
         );
-    }
-    createRGBA () {
+    },
+
+    createRGBA: function() {
         var container = this.toolbox.querySelector( ".gn8-colorize-tool-container" );
         var html = function () {
             return `<div class="gn8-colorize-range-group" data-channel="red" >
@@ -3248,8 +3258,9 @@ function() {
         container.innerHTML = html();
         events();
         update();
-    }
-    createPalette () {
+    },
+
+    createPalette: function() {
         try {
             var palette = this.data.palette;
             var container = this.toolbox.querySelector( ".gn8-colorize-tool-container" );
@@ -3268,8 +3279,9 @@ function() {
         } catch (error) {
             reject();
         } 
-    }
-    createCopic () {
+    },
+
+    createCopic: function() {
         try {
             var palette = this._copic;
             var container = this.toolbox.querySelector( ".gn8-colorize-tool-container" );
@@ -3286,8 +3298,9 @@ function() {
                 }
             }.bind( this ) );
         } catch (error) {}
-    }
-    createPrisma () {
+    },
+
+    createPrisma: function() {
         try {
             var palette = this._prismacolor;
             var container = this.toolbox.querySelector( ".gn8-colorize-tool-container" );
@@ -3304,8 +3317,9 @@ function() {
                 }
             }.bind( this ) );
         } catch (error) {}
-    }
-    createRal () {
+    },
+
+    createRal: function() {
         try {
             var palette = this._ral;
             var container = this.toolbox.querySelector( ".gn8-colorize-tool-container" );
@@ -3322,8 +3336,9 @@ function() {
                 }
             }.bind( this ) );
         } catch (error) {}
-    }
-    createNcs () {
+    },
+
+    createNcs: function() {
         try {
             var palette = this._ncs;
             var container = this.toolbox.querySelector( ".gn8-colorize-tool-container" );
@@ -3340,8 +3355,9 @@ function() {
                 }
             }.bind( this ) );
         } catch (error) {}
-    }
-    createChart ( list ) {
+    },
+
+    createChart: function( list ) {
         var chart = document.createElement( "div" );
         chart.classList.add( "gn8-colorize-chart" );
         list.forEach( color => {
@@ -3355,8 +3371,9 @@ function() {
             chart.appendChild( c );
         } );
         return chart;
-    }
-    inspectName () {
+    },
+
+    inspectName: function() {
         if ( !this.hex ) return "";
         try {
             if ( this._names.hasOwnProperty( this.hex ) ) return this._names[ this.hex ];
@@ -3372,8 +3389,9 @@ function() {
             });
             return `~${this._names[ diffs[0][0] ]}`;
         } catch (error) { return ""; }
-    }
-    inspectTheme () {
+    },
+
+    inspectTheme: function() {
         if ( !this.rgb ) return "light";
         var rgb = this.rgb.replace(/\s/g,'');
         var result = /(\d{1,3}),(\d{1,3}),(\d{1,3})\S/g.exec( rgb );
@@ -3385,8 +3403,9 @@ function() {
         );
         if( lightness > 125 ) return "light";
         return "dark";
-    }
-    hexToRgb ( hex ) {
+    },
+
+    hexToRgb: function( hex ) {
         var hex = hex.replace(/\s/g,'');
         try {
             var short = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
@@ -3398,8 +3417,9 @@ function() {
             var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec( hex );
             return `rgba(${parseInt(result[1], 16)},${parseInt(result[2], 16)},${parseInt(result[3], 16)},1)`;
         } catch (error) { return false;}
-    }
-    hexToRgbArray ( hex ) {
+    },
+
+    hexToRgbArray: function( hex ) {
         var hex = hex.replace(/\s/g,'');
         try {
             var short = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
@@ -3418,8 +3438,9 @@ function() {
         } catch (error) {
             return false;
         }
-    }
-    rgbToHEX ( rgb ) {
+    },
+
+    rgbToHEX: function( rgb ) {
         var rgb = rgb.replace(/\s/g,'');
         var result = /(\d{1,3}),(\d{1,3}),(\d{1,3})\S/g.exec( rgb );
         var r = parseInt(result[1]).toString(16);
@@ -3429,13 +3450,15 @@ function() {
         var b = parseInt(result[3]).toString(16);
         if ( b.length < 2 ) b = "0" + b;
         return "#" + r + g + b;
-    }
-    hslToRGB ( h,s,l ) {
+    },
+
+    hslToRGB: function( h,s,l ) {
         var a = s * Math.min( l, 1-l );
         var f = ( n, k = ( n + h / 30 ) % 12 ) => l - a * Math.max( Math.min( k-3, 9-k, 1 ), -1 );                 
         return [f(0),f(8),f(4)];
-    }
-    rgbToHSL (r,g,b) {
+    },
+
+    rgbToHSL: function(r,g,b) {
         r /= 255;
         g /= 255;
         b /= 255;
@@ -3473,8 +3496,9 @@ function() {
             "s" : s,
             "l" : l
         }
-    }
-    hwbtoRGB( h, w, b ) {
+    },
+
+    hwbtoRGB: function( h, w, b ) {
         var r, g, b, i, f, p, q, t;
         i = Math.floor(h * 6);
         f = h * 6 - i;
@@ -3494,8 +3518,9 @@ function() {
             g: Math.round(g * 255),
             b: Math.round(b * 255)
         };
-    }
-    rgbtoHSV( r, g, b ) {
+    },
+
+    rgbtoHSV: function( r, g, b ) {
         let rabs, gabs, babs, rr, gg, bb, h, s, v, diff, diffc, percentRoundFn;
         rabs = parseInt( r ) / 255;
         gabs = parseInt( g ) / 255;
@@ -3530,8 +3555,9 @@ function() {
             s: percentRoundFn(s * 100),
             v: percentRoundFn(v * 100)
         };
-    }
-    updatePreview () {
+    },
+
+    updatePreview: function() {
         if ( !this.timer || this.timer < Date.now() - 50 ) {
             var preview = this.toolbox.querySelector( ".gn8-colorize-tool-preview" );
             var inputs = this.toolbox.querySelector( ".gn8-colorize-tool-input" );
@@ -3543,12 +3569,14 @@ function() {
             inputs.querySelector( ".rgba" ).value = this.rgb;
             this.timer = Date.now();
         }
-    }
-    updateName () {
+    },
+
+    updateName: function() {
         this.name = this.inspectName();
         this.toolbox.querySelector( ".gn8-colorize-tool-preview .name" ).innerText = this.name;
-    }
-    idFunction( l ){
+    },
+
+    idFunction: function( l ){
         if( !l ){
             l = 31;
         }else{
@@ -3563,7 +3591,5 @@ function() {
         r = f.charAt(Math.floor(Math.random() * f.length)) + r;
         return r;
     }
-}
-
-  
+  })
 });
