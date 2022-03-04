@@ -42,8 +42,8 @@
     "3D": false,
     "2D": true,
 
-    "itemId_old": "141f8f1a43a8405993e08264836a207b",
-    "itemId": "8053d64fbd304c4881f90b27bdcf3293",
+    "itemId": "141f8f1a43a8405993e08264836a207b",
+    "itemId_no_layers": "8053d64fbd304c4881f90b27bdcf3293",
 
     "position": {
       "left": 0,

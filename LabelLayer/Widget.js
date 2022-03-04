@@ -55,22 +55,22 @@ function(declare, lang, BaseWidget, utils, LayerStructure, LayerNode, FeatureLay
       utils.loadStyleLink('WidgetNotifications', folderUrl + 'libs/widget-notifications/style.css')
       
       document.querySelector('#label-btn')
-      .addEventListener('click', lang.hitch(this,this._labelLayer))
+      .addEventListener('click', lang.hitch(this,this._updateLabels))
       
       document.querySelector('#label-layer-list')
       .addEventListener('change', lang.hitch(this, this._updateFieldsAndPlacementOptions))
 
       document.querySelector('#label-color-preview')
-      .addEventListener('click', lang.hitch(this, this._initColorPicker))
+      .addEventListener('click', lang.hitch(this, () => this._initColorPicker('label-color')))
 
       document.querySelector('#label-color')
-      .addEventListener('change', lang.hitch(this, this._updateLabelColorPreview))
+      .addEventListener('change', lang.hitch(this, () => this._updateColorPreview('label-color')))
 
       document.querySelector('#label-halo-color-preview')
-      .addEventListener('click', lang.hitch(this, this._initHaloColorPicker))
+      .addEventListener('click', lang.hitch(this, () => this._initColorPicker('label-halo-color')))
 
       document.querySelector('#label-halo-color')
-      .addEventListener('change', lang.hitch(this, this._updateHaloColorPreview))
+      .addEventListener('change', lang.hitch(this, () => this._updateColorPreview('label-halo-color')))
     },
 
     onOpen: function() {
@@ -143,50 +143,22 @@ function(declare, lang, BaseWidget, utils, LayerStructure, LayerNode, FeatureLay
       })
     },
 
-    _initColorPicker: function() {
-      
+    _initColorPicker: function(id) {   
       let data = {
         "id" : null,
         "container" : document.querySelector('#colorizer'),
-        "value" : document.querySelector('#label-color').value
+        "value" : document.querySelector(`#${id}`).value
       }
       let colorizer = new Gn8Colorize(data);
       colorizer.init().then( 
         success => {
-          document.querySelector('#label-color').value = success.hex
-          document.querySelector('#label-color-preview').style.backgroundColor = success.hex
+          document.querySelector(`#${id}`).value = success.hex
+          document.querySelector(`#${id}-preview`).style.backgroundColor = success.hex
           console.log( success );
         }, error => {
           console.log( error );
         } 
       )
-    },
-
-    _initHaloColorPicker: function() {
-      
-      let data = {
-        "id" : null,
-        "container" : document.querySelector('#colorizer'),
-        "value" : document.querySelector('#label-halo-color').value
-      }
-      let colorizer = new Gn8Colorize(data);
-      colorizer.init().then( 
-        success => {
-          document.querySelector('#label-halo-color').value = success.hex
-          document.querySelector('#label-halo-color-preview').style.backgroundColor = success.hex
-          console.log( success );
-        }, error => {
-          console.log( error );
-        } 
-      )
-    },
-
-    _updateLabelColorPreview: function() {
-      this._updateColorPreview('label-color')
-    },
-
-    _updateHaloColorPreview: function() {
-      this._updateColorPreview('label-halo-color')
     },
 
     _updateColorPreview: function(id) {
@@ -209,7 +181,7 @@ function(declare, lang, BaseWidget, utils, LayerStructure, LayerNode, FeatureLay
       return div.firstChild;
     },
 
-    _labelLayer: function() {
+    _updateLabels: function() {
       let layer =  this._getSelectedLayer()
       let layerNode = this.layerStructure.getNodeById(layer.id)
 
@@ -220,7 +192,10 @@ function(declare, lang, BaseWidget, utils, LayerStructure, LayerNode, FeatureLay
           this.map.addLayer(layer)
           layer = featureLayer
         } catch(e) {
-          this.notification.notify('Teksting feilet', 'Klarte ikke å konvertere grafikklag til kartobjektlag (FeatureLayer)')
+          this.notification.notify(
+            'Teksting feilet', 
+            'Klarte ikke å konvertere grafikklag til kartobjektlag (FeatureLayer)'
+          )
         }
       }
       
@@ -241,7 +216,7 @@ function(declare, lang, BaseWidget, utils, LayerStructure, LayerNode, FeatureLay
       let labelHaloSize = document.querySelector('#label-halo-size').value
       
       let reg=/^#([0-9a-f]{3}){1,2}$/i; // Test for hexadecimal color
-      textColor = (reg.test(textColor)) ? textColor : '#666'
+      textColor = (reg.test(textColor)) ? textColor : '#000000'
 
       let fontWeights = {
         normal: Font.WEIGHT_NORMAL,
